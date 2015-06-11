@@ -1,0 +1,17 @@
+##script for question 3 Quizz 3 Getting and cleaning data courser
+library(dplyr)
+library(downloader)
+download("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv", destfile = "GDPData.csv")
+download("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv", destfile= "Educationaldata.csv")
+GDPData <- read.csv("GDPData.csv", stringsAsFactors = FALSE, skip=4, nrows=190)
+Educationaldata <- read.csv("Educationaldata.csv", stringsAsFactors = FALSE)
+combined <-merge(GDPData,Educationaldata, by.x="X", by.y="CountryCode", all.x=FALSE, all.y=FALSE)
+combined <-arrange(combined,X.1)
+OECD <- filter(combined, Income.Group =="High income: OECD")
+nonOECD <- filter(combined, Income.Group =="High income: nonOECD")
+AvgOECD <- summarize(OECD, mean(X.1))
+AvgnonOECD <- summarize(nonOECD, mean(X.1))
+GDP <- combined$X.4
+GDP <- as.integer(GDP)
+print(AvgOECD)
+print(AvgnonOECD)
